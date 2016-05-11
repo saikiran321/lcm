@@ -1,7 +1,0 @@
-package exlcm;
-
-struct stark
-{
-	int64_t number1;
-	int64_t number2;
-}

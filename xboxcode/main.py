@@ -1,8 +1,14 @@
-import lcm
-from exlcm import xbox
 from os import popen
 from sys import stdin
 import re  # Regular expressions to search for patterns in a list
+import socket
+
+
+HOST = '192.168.0.100'    # The remote host
+PORT = 50006              # The same port as used by the server
+
+
+
 
 s = re.compile('[ :]') #s stores the pattern [ :] which can be used for searching later
 
@@ -46,12 +52,14 @@ def event_stream(deadzone=0,scale=32768):      #is generally called from our pro
                 event = Event(key,data[key],_data[key])  #outputs in the format Event(key, value, old value)
                 yield event
             _data = data
-            
 
-lc = lcm.LCM("udpm://224.0.0.251:7667?ttl=1")
+          
 for event in event_stream(deadzone=12000):
     print event
-    if event:
-        msg=xbox()
-        msg.message=str(event)
-        lc.publish("Xbox", msg.encode())
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect((HOST, PORT)) 
+    sock.send(str(event))
+    sock.close()
+  
+
+# sock.close()
