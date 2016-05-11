@@ -1,7 +1,6 @@
 import lcm
-from exlcm import stark
+from exlcm import xbox
 lc = lcm.LCM("udpm://224.0.0.251:7667?ttl=1")
-msg=stark()
-msg.number1=20
-msg.number2=80
+msg=xbox()
+msg.message="Event(LT,205,197)"
 lc.publish("Xbox", msg.encode())

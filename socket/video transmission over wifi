@@ -1,0 +1,44 @@
+_______author sai kiran__________
+
+Acheiving Low latency transmission from rpi to PC
+
+Concept behind creating a local tcp server in rpi,and using viewing on other Lap/Pc
+
+
+Step-1
+
+Install Gstreamer software
+
+	1.sudo nano /etc/apt/sources.list
+	2. deb http://vontaene.de/raspbian-updates/ . main
+	3.sudo apt-get update 
+	4.sudo apt-get install gstreamer1.0  
+				or 
+		sudo apt-get install gstreamer1.0-tools
+
+
+		Streaming from Raspi
+
+		raspivid -t 0 -h 720 -w 1080 -fps 25 -hf -b 2000000 -o - | gst-launch-1.0 -v fdsrc ! h264parse !  rtph264pay config-interval=1 pt=96 ! gdppay ! tcpserversink host=YOUR_RPI_IP_ADDRESS port=5000
+
+
+		View on the end
+
+		gst-launch-1.0 -v tcpclientsrc host=YOUR_RPI_IP_ADDRESS  port=5000  ! gdpdepay !  rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false 
+
+
+If pipeline error 
+	sudo apt-get install gstreamer1.0-plugins-bad
+
+
+
+	Soureces
+	https://gist.github.com/bot11/64026a09128b2e3de794
+	https://www.raspberrypi.org/forums/viewtopic.php?p=491075
+	http://gstreamer-devel.966125.n4.nabble.com/gstreamer-in-Ubuntu-14-04-messy-td4667165.html
+	
+	http://raspberrypi.stackexchange.com/questions/42136/raspberry-pi-camera-live-video-streaming-with-gstreamer-over-rth-to-android?rq=1
+
+	http://www.raspberry-projects.com/pi/pi-hardware/raspberry-pi-camera/streaming-video-using-gstreamer
+
+
